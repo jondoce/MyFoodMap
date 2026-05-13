@@ -1,33 +1,58 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from "@react-navigation/native";
+import { useFonts } from "expo-font";
+import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
+import "react-native-reanimated";
+import "../global.css";
 
-import { useColorScheme } from '@/components/useColorScheme';
+import { QueryProvider } from "@shared/components/QueryProvider";
+import { useColorScheme } from "@/components/useColorScheme";
+import { t } from "@shared/config/translations";
 
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from 'expo-router';
+export { ErrorBoundary } from "expo-router";
 
 export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
+  initialRouteName: "(tabs)",
 };
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+
+const customLightTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: "#EE7A24",
+    background: "#FAF8F4",
+    card: "#FDFCFA",
+    text: "#1C1917",
+    border: "#F5F0E8",
+  },
+};
+
+const customDarkTheme = {
+  ...DarkTheme,
+  colors: {
+    ...DarkTheme.colors,
+    primary: "#EE7A24",
+    background: "#1C1917",
+    card: "#292524",
+    text: "#F0ECE8",
+    border: "#3D3835",
+  },
+};
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     ...FontAwesome.font,
   });
 
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
     if (error) throw error;
   }, [error]);
@@ -49,11 +74,62 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
-    </ThemeProvider>
+    <QueryProvider>
+      <ThemeProvider
+        value={colorScheme === "dark" ? customDarkTheme : customLightTheme}
+      >
+        <Stack
+          screenOptions={{
+            headerStyle: {
+              backgroundColor:
+                colorScheme === "dark" ? "#251F1A" : "#FFFDF9",
+            },
+            headerTintColor:
+              colorScheme === "dark" ? "#F5EDE4" : "#573F35",
+            headerTitleStyle: {
+              fontWeight: "700",
+              fontSize: 18,
+            },
+            headerShadowVisible: false,
+          }}
+        >
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="restaurant/create"
+            options={{
+              title: t.restaurants.addRestaurant,
+              presentation: "modal",
+            }}
+          />
+          <Stack.Screen
+            name="restaurant/[id]"
+            options={{ title: t.restaurants.restaurantDetails }}
+          />
+          <Stack.Screen
+            name="restaurant/[id]/edit"
+            options={{
+              title: t.restaurants.editRestaurant,
+              presentation: "modal",
+            }}
+          />
+          <Stack.Screen
+            name="admin/cuisines"
+            options={{ title: t.cuisines.manageCuisineTypes }}
+          />
+          <Stack.Screen
+            name="admin/debug"
+            options={{ title: "Debug Logs" }}
+          />
+          <Stack.Screen
+            name="profile-edit"
+            options={{
+              title: t.profile.editProfile,
+              presentation: "modal",
+            }}
+          />
+        </Stack>
+      </ThemeProvider>
+    </QueryProvider>
   );
 }

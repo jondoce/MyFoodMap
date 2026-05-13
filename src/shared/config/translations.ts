@@ -1,0 +1,153 @@
+export const t = {
+  appName: "MyFoodMap",
+
+  common: {
+    loading: "Cargando...",
+    error: "Error",
+    cancel: "Cancelar",
+    delete: "Eliminar",
+    save: "Guardar",
+    edit: "Editar",
+    close: "Cerrar",
+    tryAgain: "Reintentar",
+    oops: "¡Vaya!",
+    other: "Otro",
+    selectOption: "Selecciona una opción",
+  },
+
+  auth: {
+    checkingSession: "Comprobando sesión...",
+    signIn: "Iniciar sesión",
+    signUp: "Registrarse",
+    signOut: "Cerrar sesión",
+    signInFailed: "No ha sido posible iniciar sesión",
+    signUpFailed: "No ha sido posible registrarse",
+    signOutFailed: "No ha sido posible cerrar sesión",
+    invalidCredentials: "Correo o contraseña incorrectos",
+    invalidEmail: "Introduce un correo válido",
+    userNotFound: "No existe ninguna cuenta con este correo",
+    emailAlreadyInUse: "Ya hay una cuenta registrada con este correo",
+    weakPassword: "La contraseña debe tener al menos 6 caracteres",
+    networkError: "Error de conexión. Comprueba tu internet",
+    email: "Correo electrónico",
+    emailPlaceholder: "tu@correo.com",
+    password: "Contraseña",
+    passwordPlaceholder: "Tu contraseña",
+    passwordMin: "Mín. 6 caracteres",
+    name: "Nombre",
+    namePlaceholder: "Tu nombre",
+    emailRequired: "El correo es obligatorio",
+    passwordRequired: "La contraseña es obligatoria",
+    passwordMinLength: "La contraseña debe tener al menos 6 caracteres",
+    nameRequired: "El nombre es obligatorio",
+    newHere: "¿Eres nuevo aquí? ",
+    createAccount: "Crear una cuenta",
+    alreadyHaveAccount: "¿Ya tienes cuenta? ",
+    loginTitle: "MyFoodMap",
+    loginSubtitle: "Tu diario personal de comida",
+    registerTitle: "Únete a MyFoodMap",
+    registerSubtitle: "Empieza a registrar tus restaurantes favoritos",
+    createAccountButton: "Crear cuenta",
+  },
+
+  tabs: {
+    myRestaurantes: "Mis restaurantes",
+    map: "Mapa",
+    profile: "Perfil",
+  },
+
+  restaurants: {
+    addRestaurant: "Añadir restaurante",
+    restaurantDetails: "Detalles del restaurante",
+    editRestaurant: "Editar restaurante",
+    saveRestaurant: "Guardar restaurante",
+    updateRestaurant: "Actualizar restaurante",
+    deleteRestaurant: "Eliminar restaurante",
+    deleteConfirm: (name: string) =>
+      `¿Seguro que quieres eliminar "${name}"?`,
+    failedToCreate: "Error al crear el restaurante",
+    failedToUpdate: "Error al actualizar el restaurante",
+    failedToDelete: "Error al eliminar",
+    failedToLoad: "Error al cargar los restaurantes",
+    notFound: "Restaurante no encontrado",
+    loading: "Cargando restaurante...",
+    loadingList: "Cargando restaurantes...",
+    noRestaurants: "Aún no hay restaurantes",
+    noRestaurantsDesc:
+      "Añade tu primer restaurante para empezar a construir tu mapa personal de comida.",
+    addFirst: "Añadir mi primer restaurante",
+    rating: "Valoración",
+    notes: "Notas",
+    location: "Ubicación",
+    name: "Nombre del restaurante",
+    namePlaceholder: "Ej. La Trattoria",
+    cuisineType: "Tipo de cocina",
+    cuisineLoading: "Cargando...",
+    cuisineSelect: "Selecciona tipo de cocina",
+    
+    notesLabel: "Notas (opcional)",
+    notesPlaceholder: "Anotaciones adicionales...",
+    getLocation: "Obtener ubicación...",
+    useCurrentLocation: "Usar mi ubicación actual",
+    locationDenied:
+      "Permiso de ubicación denegado. Actívalo en los ajustes del dispositivo.",
+    address: "Dirección",
+    addressPlaceholder: "Ej. Calle Mayor 123, Madrid",
+    googleMapsLink: "Enlace",
+    googleMapsLinkPlaceholder: "https://maps.app.goo.gl/...",
+    openInMaps: "Abrir en Maps",
+    savedCount: (count: number) =>
+      `${count} restaurante${count !== 1 ? "s" : ""} guardado${count !== 1 ? "s" : ""}`,
+    mapView: "Vista del mapa",
+    mapMobileOnly: "Los mapas están disponibles en dispositivos móviles",
+    nameRequired: "El nombre es obligatorio",
+    cuisineTypeRequired: "El tipo de cocina es obligatorio",
+    ratingRange: (min: number, max: number) =>
+      `La valoración debe estar entre ${min} y ${max}`,
+  },
+
+  cuisines: {
+    manageCuisineTypes: "Gestionar tipos de cocina",
+    manageDescription: "Añade, edita o elimina categorías de cocina",
+    addCuisineType: "Añadir tipo de cocina",
+    editCuisineType: "Editar tipo de cocina",
+    deleteCuisineType: "Eliminar tipo de cocina",
+    deleteConfirm: (name: string) =>
+      `¿Seguro que quieres eliminar "${name}"?`,
+    cuisineNamePlaceholder: "Nombre del tipo de cocina",
+    nameRequired: "El nombre es obligatorio",
+    failedToSave: "Error al guardar el tipo de cocina",
+    failedToDelete: "Error al eliminar el tipo de cocina",
+    failedToLoad: "Error al cargar los tipos de cocina",
+    loading: "Cargando tipos de cocina...",
+    noneFound: "No se encontraron tipos de cocina.",
+  },
+
+  profile: {
+    foodie: "Foodie",
+    editProfile: "Editar perfil",
+    editDescription: "Cambia tu nombre o avatar",
+    chooseAvatar: "Elige un avatar",
+  },
+
+  map: {
+    loading: "Cargando mapa...",
+    noRestaurants: "No hay restaurantes para mostrar",
+    noRestaurantsDesc:
+      "Añade restaurantes con ubicación para verlos en el mapa.",
+    noLocations: "Sin datos de ubicación",
+    noLocationsDesc:
+      "Tus restaurantes aún no tienen datos de ubicación.",
+  },
+
+  notFound: {
+    title: "¡Vaya!",
+    message: "Esta pantalla no existe.",
+    goHome: "¡Ir a la pantalla principal!",
+  },
+
+  errors: {
+    userNotAuthenticated: "Usuario no autenticado",
+    failedToGetLocation: "Error al obtener la ubicación",
+  },
+} as const;

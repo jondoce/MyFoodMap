@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "myFoodMap",
+    "name": "MyFoodMap",
     "slug": "myFoodMap",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/icon_myfoodmap_square.png",
     "scheme": "myfoodmap",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -14,15 +14,23 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.myFoodMap"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/images/icon_myfoodmap_square.png",
+        "backgroundColor": "#FF6B35"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ],
+      "package": "com.anonymous.myFoodMap"
     },
     "web": {
       "bundler": "metro",
@@ -30,7 +38,13 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow MyFoodMap to use your location to tag restaurants."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
