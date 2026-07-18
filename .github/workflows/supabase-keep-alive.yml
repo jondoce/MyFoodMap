@@ -11,23 +11,16 @@ jobs:
     steps:
       - name: Ping Supabase REST API
         run: |
-          URL="${{ secrets.SUPABASE_URL }}/rest/v1/cuisine_types?select=id&limit=1"
-          echo "Pinging: $URL"
-
-          response=$(curl -s -w "%{http_code}" \
-            -o /tmp/supabase_response.txt \
+          response=$(curl -s -o /dev/null -w "%{http_code}" \
             -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
-            "$URL" 2>&1) || true
+            "${{ secrets.SUPABASE_URL }}/rest/v1/cuisine_types?select=id&limit=1")
 
           echo "HTTP Status: $response"
-          echo "Response: $(cat /tmp/supabase_response.txt 2>/dev/null)"
 
-          if [ "$response" -ge 200 ] && [ "$response" -lt 300 ]; then
-            echo "Supabase is alive!"
-          elif [ "$response" = "000" ]; then
+          if [ "$response" = "000" ]; then
             echo "ERROR: Could not connect. Project may be paused."
             exit 1
           else
-            echo "Supabase responded (status $response) - project is active!"
+            echo "Supabase is alive!"
           fi
