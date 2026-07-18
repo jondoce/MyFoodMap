@@ -87,9 +87,13 @@ export default function RestaurantsScreen() {
     if (selectedCuisineId) {
       filtered = filtered.filter(r => translateCuisine(r.cuisine_type?.name) === selectedCuisineId);
     }
-    if (searchQuery.length >= 4) {
+    if (searchQuery.length >= 2) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(r => r.name.toLowerCase().includes(query));
+      filtered = filtered.filter(r =>
+        r.name.toLowerCase().includes(query) ||
+        (r.notes && r.notes.toLowerCase().includes(query)) ||
+        (r.address && r.address.toLowerCase().includes(query))
+      );
     }
     return filtered.sort((a, b) => {
       if (b.rating !== a.rating) return b.rating - a.rating;

@@ -6,7 +6,9 @@
 -- cuisine_types. Previously, any authenticated
 -- user could CRUD cuisine types (migration 002).
 -- Now only users with is_admin = true on their
--- profile can perform those operations.
+-- profile can perform write operations.
+-- SELECT is open to all (anon + authenticated)
+-- so the app can display cuisine types to everyone.
 -- ============================================
 
 -- 1. Add is_admin column to profiles (default false)
@@ -31,22 +33,21 @@ DROP POLICY IF EXISTS "Authenticated users can update cuisine types"
 DROP POLICY IF EXISTS "Authenticated users can delete cuisine types"
   ON public.cuisine_types;
 
--- 4. Create admin-only RLS policies for cuisine_types
---    Uses a subquery on profiles to verify is_admin = true
---    for the current authenticated user (auth.uid())
+-- 4. Also drop the admin-only SELECT (replaced by public read)
+DROP POLICY IF EXISTS "Admins can view cuisine types"
+  ON public.cuisine_types;
 
-CREATE POLICY "Admins can view cuisine types"
+-- 5. Anyone can read cuisine types (anon + authenticated)
+GRANT SELECT ON public.cuisine_types TO anon;
+GRANT SELECT ON public.cuisine_types TO authenticated;
+
+CREATE POLICY "Anyone can view cuisine types"
   ON public.cuisine_types
   FOR SELECT
-  TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE profiles.id = auth.uid()
-        AND profiles.is_admin = true
-    )
-  );
+  TO anon, authenticated
+  USING (true);
 
+-- 6. Admin-only policies for mutations (INSERT/UPDATE/DELETE)
 CREATE POLICY "Admins can insert cuisine types"
   ON public.cuisine_types
   FOR INSERT
