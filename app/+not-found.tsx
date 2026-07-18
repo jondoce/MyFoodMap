@@ -1,41 +1,19 @@
 import { Link, Stack } from 'expo-router';
-import { StyleSheet } from 'react-native';
+import { Text, View } from 'react-native';
 
-import { Text, View } from '@/components/Themed';
 import { t } from '@shared/config/translations';
 
 export default function NotFoundScreen() {
   return (
     <>
       <Stack.Screen options={{ title: t.notFound.title }} />
-      <View style={styles.container}>
-        <Text style={styles.title}>{t.notFound.message}</Text>
+      <View className="flex-1 items-center justify-center p-5">
+        <Text className="text-xl font-bold">{t.notFound.message}</Text>
 
-        <Link href="/" style={styles.link}>
-          <Text style={styles.linkText}>{t.notFound.goHome}</Text>
+        <Link href="/" className="mt-4 py-4">
+          <Text className="text-sm text-[#2e78b7]">{t.notFound.goHome}</Text>
         </Link>
       </View>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  link: {
-    marginTop: 15,
-    paddingVertical: 15,
-  },
-  linkText: {
-    fontSize: 14,
-    color: '#2e78b7',
-  },
-});

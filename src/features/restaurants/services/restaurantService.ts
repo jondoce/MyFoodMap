@@ -1,5 +1,4 @@
 import { supabase } from "@lib/supabase/client";
-import { STORAGE_BUCKETS } from "@shared/config/constants";
 import type {
   Restaurant,
   CreateRestaurantInput,
@@ -63,29 +62,4 @@ export const restaurantService = {
     if (error) throw error;
   },
 
-  async uploadPhoto(
-    userId: string,
-    uri: string
-  ): Promise<string> {
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    const fileName = `${userId}/${Date.now()}.jpg`;
-
-    const { error } = await supabase.storage
-      .from(STORAGE_BUCKETS.RESTAURANT_PHOTOS)
-      .upload(fileName, blob, {
-        contentType: "image/jpeg",
-        upsert: false,
-      });
-
-    if (error) throw error;
-
-    const {
-      data: { publicUrl },
-    } = supabase.storage
-      .from(STORAGE_BUCKETS.RESTAURANT_PHOTOS)
-      .getPublicUrl(fileName);
-
-    return publicUrl;
-  },
 };
