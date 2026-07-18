@@ -186,7 +186,7 @@ export default function AdminCuisinesScreen() {
         >
           <Pressable
             className="bg-cream-50 dark:bg-bark-900 rounded-t-3xl p-6"
-            onPress={(e: any) => e.stopPropagation()}
+            onTouchStart={(e: any) => e.stopPropagation()}
           >
             <Text className="text-xl font-bold text-bark-800 dark:text-cream-100 mb-5 font-display">
               {editingId

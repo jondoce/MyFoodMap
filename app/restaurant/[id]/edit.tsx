@@ -32,7 +32,6 @@ export default function EditRestaurantScreen() {
   async function handleSubmit(values: {
     name: string;
     cuisine_type_id: string | null;
-    dish: string;
     rating: number;
     notes: string | null;
     latitude: number | null;
@@ -43,7 +42,6 @@ export default function EditRestaurantScreen() {
     const input: UpdateRestaurantInput = {
       name: values.name,
       cuisine_type_id: values.cuisine_type_id,
-      dish: values.dish,
       rating: values.rating,
       notes: values.notes || null,
       latitude: values.latitude,
@@ -68,7 +66,6 @@ export default function EditRestaurantScreen() {
       initialValues={{
         name: restaurant.name,
         cuisine_type_id: restaurant.cuisine_type_id,
-        dish: restaurant.dish ?? "",
         rating: restaurant.rating,
         notes: restaurant.notes ?? "",
         latitude: restaurant.latitude,

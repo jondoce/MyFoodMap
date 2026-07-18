@@ -29,6 +29,7 @@ function getStorage() {
 
 const origFetch = globalThis.fetch;
 const logFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
+  if (!__DEV__) return origFetch(input, init);
   const url = typeof input === "string" ? input : input instanceof URL ? input.toString() : "url";
   const method = init?.method || "GET";
   logger.network(`${method} ${url}`);

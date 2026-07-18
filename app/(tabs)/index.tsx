@@ -61,7 +61,7 @@ export default function RestaurantsScreen() {
     if (isAdmin) {
       router.replace("/(tabs)/admin");
     }
-  }, [isAdmin]);
+  }, [isAdmin, router]);
 
   const { data: restaurants, isLoading, error, refetch } = useRestaurants();
   

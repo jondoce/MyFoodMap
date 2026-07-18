@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { View, Text, Pressable, Platform, KeyboardAvoidingView, ScrollView, TextInput } from "react-native";
-import { Link, router } from "expo-router";
+import { Link } from "expo-router";
 import { useAuth } from "@features/auth/hooks/useAuth";
 import { Button } from "@shared/components/Button";
 import { t } from "@shared/config/translations";
@@ -31,10 +31,11 @@ export default function LoginScreen() {
     setLoading(true);
     try {
       await signIn(email.trim(), password);
-      setLoading(false);
-      await new Promise(resolve => setTimeout(resolve, 50));
-      router.replace("/(tabs)");
+      // No manual navigation needed — signIn updates the shared context,
+      // which makes isAuthenticated true, and (auth)/_layout redirects to (tabs).
     } catch {
+      // error is set in useAuth context
+    } finally {
       setLoading(false);
     }
   }

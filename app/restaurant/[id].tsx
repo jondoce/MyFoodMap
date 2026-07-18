@@ -154,7 +154,7 @@ export default function RestaurantDetailScreen() {
           <View>
             <RatingStars rating={restaurant.rating} />
           </View>
-          {(restaurant.latitude || restaurant.google_maps_url) && Platform.OS !== "web" && (
+          {(restaurant.latitude != null || restaurant.google_maps_url) && Platform.OS !== "web" && (
             <Pressable
               className="bg-white/20 px-3 py-1.5 rounded-full flex-row items-center gap-1.5"
               onPress={() => {

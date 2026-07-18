@@ -1,6 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { QUERY_KEYS } from "@shared/config/constants";
-import { useAuth } from "@features/auth/hooks/useAuth";
 import { restaurantService } from "../services/restaurantService";
 import { t } from "@shared/config/translations";
 import type { CreateRestaurantInput, UpdateRestaurantInput } from "../types/restaurant";
@@ -22,12 +21,10 @@ export function useRestaurant(id: string) {
 
 export function useCreateRestaurant() {
   const queryClient = useQueryClient();
-  const { user } = useAuth();
 
   return useMutation({
-    mutationFn: (input: CreateRestaurantInput) => {
-      if (!user) throw new Error(t.errors.userNotAuthenticated);
-      return restaurantService.create(user.id, input);
+    mutationFn: ({ userId, input }: { userId: string; input: CreateRestaurantInput }) => {
+      return restaurantService.create(userId, input);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.restaurants });

@@ -59,8 +59,8 @@ export const authService = {
 
   async updateProfile({ displayName, avatarUrl }: { displayName?: string; avatarUrl?: string }) {
     const updates: Record<string, string> = {};
-    if (displayName) updates.display_name = displayName;
-    if (avatarUrl) updates.avatar_url = avatarUrl;
+    if (displayName !== undefined) updates.display_name = displayName;
+    if (avatarUrl !== undefined) updates.avatar_url = avatarUrl;
 
     const { data, error } = await supabase.auth.updateUser({
       data: updates,

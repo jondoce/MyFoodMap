@@ -15,6 +15,16 @@ interface RestaurantWithCoords {
   name: string;
 }
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+    .replace(/\\/g, "\\\\");
+}
+
 function getMapHTML(restaurants: RestaurantWithCoords[]) {
   if (restaurants.length === 0) return "";
   
@@ -25,7 +35,7 @@ function getMapHTML(restaurants: RestaurantWithCoords[]) {
   restaurants.forEach(r => {
     const lat = r.latitude;
     const lng = r.longitude;
-    const name = r.name.replace(/"/g, "'").replace(/\\/g, "\\\\");
+    const name = escapeHtml(r.name);
     markers += `L.marker([${lat}, ${lng}]).addTo(map).bindPopup('<a href="/restaurant/${r.id}" style="font-weight:bold;text-decoration:none;color:#1a73e8;" onclick="window.ReactNativeWebView.postMessage(&#39;/restaurant/${r.id}&#39;);return false;">${name}</a>', {closeButton: false});\n`;
   });
   
@@ -66,17 +76,19 @@ export default function MapScreen() {
     );
   }
 
-  const restaurantsWithLocation = restaurants.reduce<RestaurantWithCoords[]>((acc, r) => {
-    if (r.latitude !== null && r.longitude !== null) {
-      acc.push({ id: r.id, latitude: r.latitude, longitude: r.longitude, name: r.name });
-    } else if (r.google_maps_url) {
-      const coords = parseGoogleMapsUrl(r.google_maps_url);
-      if (coords) {
-        acc.push({ id: r.id, latitude: coords.latitude, longitude: coords.longitude, name: r.name });
+  const restaurantsWithLocation = useMemo(() => {
+    return restaurants.reduce<RestaurantWithCoords[]>((acc, r) => {
+      if (r.latitude !== null && r.longitude !== null) {
+        acc.push({ id: r.id, latitude: r.latitude, longitude: r.longitude, name: r.name });
+      } else if (r.google_maps_url) {
+        const coords = parseGoogleMapsUrl(r.google_maps_url);
+        if (coords) {
+          acc.push({ id: r.id, latitude: coords.latitude, longitude: coords.longitude, name: r.name });
+        }
       }
-    }
-    return acc;
-  }, []);
+      return acc;
+    }, []);
+  }, [restaurants]);
 
   const mapHTML = useMemo(() => {
     if (restaurantsWithLocation.length === 0) return "";
@@ -110,7 +122,7 @@ export default function MapScreen() {
         style={{ flex: 1 }}
         javaScriptEnabled={true}
         domStorageEnabled={true}
-        originWhitelist={["*"]}
+        originWhitelist={["about:blank"]}
         startInLoadingState={true}
         renderLoading={() => <LoadingSpinner message="Cargando mapa..." />}
         onMessage={handleMessage}

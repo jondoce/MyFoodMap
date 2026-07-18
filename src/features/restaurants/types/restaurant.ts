@@ -4,7 +4,6 @@ export interface Restaurant {
   id: string;
   user_id: string;
   name: string;
-  dish: string | null;
   cuisine_type_id: string | null;
   rating: number;
   latitude: number | null;

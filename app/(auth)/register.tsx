@@ -13,6 +13,8 @@ export default function RegisterScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [emailConfirmationRequired, setEmailConfirmationRequired] =
+    useState(false);
   const [validationErrors, setValidationErrors] = useState<{
     displayName?: string;
     email?: string;
@@ -36,11 +38,20 @@ export default function RegisterScreen() {
   async function handleRegister() {
     if (!validate()) return;
     setLoading(true);
+    setEmailConfirmationRequired(false);
     try {
-      await signUp(email.trim(), password, displayName.trim());
-      router.replace("/(tabs)");
+      const result = await signUp(email.trim(), password, displayName.trim());
+      // If signUp returned no session, email confirmation is required.
+      // The AuthProvider already set the session if one was returned,
+      // so we only need to handle the null-session case here.
+      const session = (result as { session: unknown }).session;
+      if (!session) {
+        setEmailConfirmationRequired(true);
+      }
+      // If session exists, AuthProvider updated state and (auth)/_layout
+      // will Redirect to (tabs) automatically.
     } catch {
-      // error is set in useAuth
+      // error is set in useAuth context
     } finally {
       setLoading(false);
     }
@@ -66,6 +77,14 @@ export default function RegisterScreen() {
 
         <View className="animate-slide-up-delayed">
           {authError && <ErrorMessage message={authError} />}
+
+          {emailConfirmationRequired && (
+            <View style={{ backgroundColor: "#ECFDF5", padding: 12, borderRadius: 8, marginBottom: 16 }}>
+              <Text style={{ color: "#065F46", textAlign: "center" }}>
+                Revisa tu correo para confirmar tu cuenta antes de iniciar sesión.
+              </Text>
+            </View>
+          )}
 
           <Input
             label={t.auth.name}

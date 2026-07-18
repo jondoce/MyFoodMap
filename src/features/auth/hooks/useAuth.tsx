@@ -1,4 +1,11 @@
-import { useEffect, useState, useCallback } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 import { Session, AuthError } from "@supabase/supabase-js";
 import { authService } from "../services/authService";
 import { t } from "@shared/config/translations";
@@ -29,7 +36,7 @@ function translateAuthError(err: unknown): string {
         break;
     }
   }
-  
+
   const message = err instanceof Error ? err.message : "";
   if (message.includes("network") || message.includes("fetch")) {
     return t.auth.networkError;
@@ -46,7 +53,25 @@ interface AuthState {
   error: string | null;
 }
 
-export function useAuth() {
+interface AuthContextValue extends AuthState {
+  user: Session["user"] | null;
+  isAuthenticated: boolean;
+  signIn: (email: string, password: string) => Promise<unknown>;
+  signUp: (
+    email: string,
+    password: string,
+    displayName: string,
+  ) => Promise<unknown>;
+  signOut: () => Promise<void>;
+  updateProfile: (data: {
+    displayName?: string;
+    avatarUrl?: string;
+  }) => Promise<unknown>;
+}
+
+const AuthContext = createContext<AuthContextValue | null>(null);
+
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<AuthState>({
     session: null,
     loading: true,
@@ -79,8 +104,10 @@ export function useAuth() {
       setState((prev) => ({ ...prev, error: null }));
       try {
         const result = await authService.signIn({ email, password });
-        setState((prev) => ({ 
-          ...prev, 
+        // Update session immediately so the UI reacts without waiting
+        // for the onAuthStateChange callback.
+        setState((prev) => ({
+          ...prev,
           session: result.session,
         }));
         return result;
@@ -90,21 +117,34 @@ export function useAuth() {
         throw err;
       }
     },
-    []
+    [],
   );
 
   const signUp = useCallback(
     async (email: string, password: string, displayName: string) => {
       setState((prev) => ({ ...prev, error: null }));
       try {
-        await authService.signUp({ email, password, displayName });
+        const result = await authService.signUp({
+          email,
+          password,
+          displayName,
+        });
+        // If Supabase returned a session (no email confirmation required),
+        // update state immediately so the UI navigates.
+        if (result.session) {
+          setState((prev) => ({
+            ...prev,
+            session: result.session,
+          }));
+        }
+        return result;
       } catch (err) {
         const message = translateAuthError(err);
         setState((prev) => ({ ...prev, error: message }));
         throw err;
       }
     },
-    []
+    [],
   );
 
   const signOut = useCallback(async () => {
@@ -125,8 +165,8 @@ export function useAuth() {
         const result = await authService.updateProfile(data);
         setState((prev) => ({
           ...prev,
-          session: prev.session 
-            ? { ...prev.session, user: result.user } 
+          session: prev.session
+            ? { ...prev.session, user: result.user }
             : null,
         }));
         return result;
@@ -136,10 +176,10 @@ export function useAuth() {
         throw err;
       }
     },
-    []
+    [],
   );
 
-  return {
+  const value: AuthContextValue = {
     session: state.session,
     user: state.session?.user ?? null,
     loading: state.loading,
@@ -150,4 +190,14 @@ export function useAuth() {
     signOut,
     updateProfile,
   };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+export function useAuth(): AuthContextValue {
+  const ctx = useContext(AuthContext);
+  if (!ctx) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return ctx;
 }

@@ -56,7 +56,6 @@ function RatingSelector({
 
 interface RestaurantFormValues {
   name: string;
-  dish: string;
   cuisine_type_id: string | null;
   rating: number;
   notes: string | null;
@@ -133,7 +132,6 @@ export function RestaurantForm({
 
     await onSubmit({
       name: name.trim(),
-      dish: initialValues?.dish ?? "",
       cuisine_type_id: cuisineTypeId,
       rating,
       notes: notes.trim() || null,
